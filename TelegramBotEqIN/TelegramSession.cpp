@@ -17,7 +17,7 @@ using namespace web::http::client;
 
 namespace po = boost::program_options;
 
-TelegramSession::TelegramSession(std::string fileName) : telegramClient_(NULL), update_id(0) {
+TelegramSession::TelegramSession(std::string fileName, NSEMarketActivityDataManager& dataMgr) : dataMgr_(dataMgr), telegramClient_(NULL), update_id(0) {
     
     po::options_description config("Configuration");
     config.add_options()
@@ -46,15 +46,17 @@ void TelegramSession::run_loop() {
         if(time(NULL) < next_update_time) {
             continue;
         }
+        requests_.clear();
         next_update_time = time(NULL) + 60;
         RequestJSONValueAsync().wait();
+        for(auto r: requests_) {
+            sendResponse(r);
+        }
     }
 }
 
 pplx::task<void> TelegramSession::RequestJSONValueAsync()
 {
-    std::cout << "Using update id [" << update_id << ']' << std::endl;
-    
     char updIdStr[50];
     sprintf(updIdStr,"%d",update_id + 1);
     std::string queryParam(U("{\"limit\":20, \"offset\":" + std::string(updIdStr) +"}"));
@@ -91,8 +93,9 @@ void TelegramSession::processMessage(const json::value& v) {
             auto msgIter = msg.as_object().find("message");
             
             auto txtIter = msgIter->second.as_object().find("text");
+            std::string msgText = txtIter->second.as_string().c_str();
             if (txtIter != msg.as_object().cend()) {
-                std::cout << "Received Text [" << txtIter->second.as_string().c_str() << ']' << std::endl;
+                std::cout << "Received Text [" << msgText << ']' << std::endl;
             }
 
             auto chatIter = msgIter->second.as_object().find("chat");
@@ -104,12 +107,35 @@ void TelegramSession::processMessage(const json::value& v) {
             auto updIdIter = msg.as_object().find("update_id");
             this->update_id = updIdIter->second.as_integer();
 
+            if(msgText == "/start") {
+                continue;
+            }
+            
             char chatIdStr[50];
             sprintf(chatIdStr,"%d",userid);
 
-            std::string queryParam2(U("{\"text\": \"Hello\", \"chat_id\":" + std::string(chatIdStr) +"}"));
-
-            telegramClient_->request(methods::GET, "/sendMessage", queryParam2, "application/json");
+            TelegramSession::RequestDetails  r;
+            r.chatId_ = chatIdStr;
+            r.productId_ = msgText.substr(msgText.find(' ') + 1);
+            std::cout << "Data requested for product [" << r.productId_ << ']' << std::endl;
+            requests_.push_back(r);
         }
     }
+}
+
+void TelegramSession::sendResponse(TelegramSession::RequestDetails req) {
+
+    std::string replyText = "You seem to have entered an Invalid instrument";
+    
+    if (dataMgr_.hasDataForProduct(req.productId_)) {
+        NSEMarketActivityDataManager::NSEEQFinaniclas nf = dataMgr_.getDataForProduct(req.productId_);
+        replyText = "For product :" + req.productId_ + "\n" \
+        "Close Price : " + nf.closePrice_ + "\n" \
+        "Traded Value : " + nf.tradedVal_ + "\n" \
+        "Traded Qty : " + nf.tradedQty_ + "\n";
+    }
+    
+    std::string queryParam2(U("{\"text\":\"" + replyText +"\" , \"chat_id\":" + req.chatId_ +"}"));
+
+    telegramClient_->request(methods::GET, "/sendMessage", queryParam2, "application/json");
 }

@@ -10,6 +10,7 @@
 		725BD266252B5C7100D39E87 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 725BD265252B5C7100D39E87 /* main.cpp */; };
 		725BD270252B5F5900D39E87 /* TelegramSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 725BD26F252B5F5900D39E87 /* TelegramSession.cpp */; };
 		725BD283252BA18700D39E87 /* teleboteqin.cfg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 725BD281252BA15D00D39E87 /* teleboteqin.cfg */; };
+		72BA1DA2252DA1A700D19FCB /* NSEMarketActivityDataManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72BA1DA0252DA1A700D19FCB /* NSEMarketActivityDataManager.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -31,6 +32,8 @@
 		725BD26F252B5F5900D39E87 /* TelegramSession.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TelegramSession.cpp; sourceTree = "<group>"; };
 		725BD276252B75A500D39E87 /* TelegramSession.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TelegramSession.hpp; sourceTree = "<group>"; };
 		725BD281252BA15D00D39E87 /* teleboteqin.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = teleboteqin.cfg; sourceTree = "<group>"; };
+		72BA1DA0252DA1A700D19FCB /* NSEMarketActivityDataManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NSEMarketActivityDataManager.cpp; sourceTree = "<group>"; };
+		72BA1DA1252DA1A700D19FCB /* NSEMarketActivityDataManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NSEMarketActivityDataManager.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +70,8 @@
 				725BD265252B5C7100D39E87 /* main.cpp */,
 				725BD26F252B5F5900D39E87 /* TelegramSession.cpp */,
 				725BD276252B75A500D39E87 /* TelegramSession.hpp */,
+				72BA1DA0252DA1A700D19FCB /* NSEMarketActivityDataManager.cpp */,
+				72BA1DA1252DA1A700D19FCB /* NSEMarketActivityDataManager.hpp */,
 			);
 			path = TelegramBotEqIN;
 			sourceTree = "<group>";
@@ -129,6 +134,7 @@
 			files = (
 				725BD266252B5C7100D39E87 /* main.cpp in Sources */,
 				725BD270252B5F5900D39E87 /* TelegramSession.cpp in Sources */,
+				72BA1DA2252DA1A700D19FCB /* NSEMarketActivityDataManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,6 +271,8 @@
 					"-lboost_thread-mt",
 					"-lboost_chrono-mt",
 					"-lboost_program_options-mt",
+					"-lcurl",
+					"-lz",
 					"-L/usr/local/Cellar/boost/1.73.0/lib",
 					"-L/usr/local/Cellar/cpprestsdk/2.10.16/lib",
 					"-L/usr/local/Cellar/openssl\\@1.1/1.1.1g/lib",
@@ -292,6 +300,8 @@
 					"-lboost_thread-mt",
 					"-lboost_chrono-mt",
 					"-lboost_program_options-mt",
+					"-lcurl",
+					"-lz",
 					"-L/usr/local/Cellar/boost/1.73.0/lib",
 					"-L/usr/local/Cellar/cpprestsdk/2.10.16/lib",
 					"-L/usr/local/Cellar/openssl\\@1.1/1.1.1g/lib",
