@@ -29,12 +29,18 @@ public:
 private:
     pplx::task<void> RequestJSONValueAsync();
     void processMessage(const web::json::value& v);
+
+    void sendUsage(std::string req);
     void sendResponse(RequestDetails req);
+    void sendErrorResponse(std::string req);
 
     NSEMarketActivityDataManager dataMgr_;
     web::http::client::http_client* telegramClient_;
     int update_id;
-    std::vector<RequestDetails> requests_;
+
+    std::vector<RequestDetails> validRequests_;
+    std::vector<std::string> invalidRequests_;
+    std::vector<std::string> initMsgs_;
 };
 
 #endif /* TelegramSession_h */

@@ -46,11 +46,24 @@ void TelegramSession::run_loop() {
         if(time(NULL) < next_update_time) {
             continue;
         }
-        requests_.clear();
+
+        initMsgs_.clear();
+        validRequests_.clear();
+        invalidRequests_.clear();
+
         next_update_time = time(NULL) + 60;
         RequestJSONValueAsync().wait();
-        for(auto r: requests_) {
+        
+        for(auto r: initMsgs_) {
+            sendUsage(r);
+        }
+
+        for(auto r: validRequests_) {
             sendResponse(r);
+        }
+
+        for(auto r: invalidRequests_) {
+            sendErrorResponse(r);
         }
     }
 }
@@ -107,24 +120,45 @@ void TelegramSession::processMessage(const json::value& v) {
             auto updIdIter = msg.as_object().find("update_id");
             this->update_id = updIdIter->second.as_integer();
 
-            if(msgText == "/start") {
-                continue;
-            }
-            
             char chatIdStr[50];
             sprintf(chatIdStr,"%d",userid);
 
+            if(msgText == "/start") {
+                initMsgs_.push_back(chatIdStr);
+                continue;
+            }
+
+            std::vector<std::string> tokens;
+            size_t start_pos = 0;
+            while(start_pos < msgText.length())
+            {
+                size_t nextpos = msgText.find(' ', start_pos);
+                if(nextpos == std::string::npos || tokens.size() == 2)
+                {
+                    tokens.push_back(msgText.substr(start_pos));
+                    break;
+                } else
+                {
+                    tokens.push_back(msgText.substr(start_pos, nextpos - start_pos));
+                }
+                start_pos = nextpos + 1;
+            }
+
+            if (tokens.size() != 3 || tokens[0] != "TDSUMM" || tokens[1] != "NSE") {
+                invalidRequests_.push_back(chatIdStr);
+                continue;
+            }
+
             TelegramSession::RequestDetails  r;
             r.chatId_ = chatIdStr;
-            r.productId_ = msgText.substr(msgText.find(' ') + 1);
+            r.productId_ = tokens[2];
             std::cout << "Data requested for product [" << r.productId_ << ']' << std::endl;
-            requests_.push_back(r);
+            validRequests_.push_back(r);
         }
     }
 }
 
 void TelegramSession::sendResponse(TelegramSession::RequestDetails req) {
-
     std::string replyText = "You seem to have entered an Invalid instrument";
     
     if (dataMgr_.hasDataForProduct(req.productId_)) {
@@ -136,6 +170,28 @@ void TelegramSession::sendResponse(TelegramSession::RequestDetails req) {
     }
     
     std::string queryParam2(U("{\"text\":\"" + replyText +"\" , \"chat_id\":" + req.chatId_ +"}"));
+
+    telegramClient_->request(methods::GET, "/sendMessage", queryParam2, "application/json");
+}
+
+void TelegramSession::sendUsage(std::string req) {
+    std::string replyText = "Hi, Thank you for choosing our services.\n"\
+                            "Please use the following format for receiving daily trade summary-\n"\
+                            "TDSUMM NSE <Instrument>\n"\
+                            "e.g. TDSUMM NSE INFY";
+
+    std::string queryParam2(U("{\"text\":\"" + replyText +"\" , \"chat_id\":" + req +"}"));
+
+    telegramClient_->request(methods::GET, "/sendMessage", queryParam2, "application/json");
+}
+
+void TelegramSession::sendErrorResponse(std::string req) {
+    std::string replyText = "You have used an invalid format.\n"\
+                            "Please use the following format-\n"\
+                            "TDSUMM NSE <Instrument>\n"\
+                            "e.g. TDSUMM NSE INFY";
+
+    std::string queryParam2(U("{\"text\":\"" + replyText +"\" , \"chat_id\":" + req +"}"));
 
     telegramClient_->request(methods::GET, "/sendMessage", queryParam2, "application/json");
 }
