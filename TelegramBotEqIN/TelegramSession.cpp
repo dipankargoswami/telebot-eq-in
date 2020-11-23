@@ -106,10 +106,12 @@ void TelegramSession::processMessage(const json::value& v) {
             auto msgIter = msg.as_object().find("message");
             
             auto txtIter = msgIter->second.as_object().find("text");
-            std::string msgText = txtIter->second.as_string().c_str();
-            if (txtIter != msg.as_object().cend()) {
-                std::cout << "Received Text [" << msgText << ']' << std::endl;
+            if (txtIter == msg.as_object().cend()) {
+                std::cout << "Received empty message." << std::endl;
+                continue;
             }
+            std::string msgText = txtIter->second.as_string().c_str();
+            std::cout << "Received Text [" << msgText << ']' << std::endl;
 
             auto chatIter = msgIter->second.as_object().find("chat");
             int userid = 0;

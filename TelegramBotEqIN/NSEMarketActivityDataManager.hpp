@@ -26,10 +26,6 @@ public:
     NSEEQFinaniclas getDataForProduct(std::string product);
 
 private:
-    void downloadFile();
-    std::string getFileName();
-    int decompressFile(FILE *source, FILE *dest);
-    
     bool downloadCompleted_;
     std::map<std::string, NSEEQFinaniclas> instrumentData_;
 };

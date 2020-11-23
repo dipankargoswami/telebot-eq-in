@@ -11,6 +11,7 @@
 		725BD270252B5F5900D39E87 /* TelegramSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 725BD26F252B5F5900D39E87 /* TelegramSession.cpp */; };
 		725BD283252BA18700D39E87 /* teleboteqin.cfg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 725BD281252BA15D00D39E87 /* teleboteqin.cfg */; };
 		72BA1DA2252DA1A700D19FCB /* NSEMarketActivityDataManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72BA1DA0252DA1A700D19FCB /* NSEMarketActivityDataManager.cpp */; };
+		72C5A67E256BA0BA00EF506D /* DataFileDownloadHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C5A67C256BA0BA00EF506D /* DataFileDownloadHelper.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -34,6 +35,8 @@
 		725BD281252BA15D00D39E87 /* teleboteqin.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = teleboteqin.cfg; sourceTree = "<group>"; };
 		72BA1DA0252DA1A700D19FCB /* NSEMarketActivityDataManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NSEMarketActivityDataManager.cpp; sourceTree = "<group>"; };
 		72BA1DA1252DA1A700D19FCB /* NSEMarketActivityDataManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NSEMarketActivityDataManager.hpp; sourceTree = "<group>"; };
+		72C5A67C256BA0BA00EF506D /* DataFileDownloadHelper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DataFileDownloadHelper.cpp; sourceTree = "<group>"; };
+		72C5A67D256BA0BA00EF506D /* DataFileDownloadHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DataFileDownloadHelper.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +75,8 @@
 				725BD276252B75A500D39E87 /* TelegramSession.hpp */,
 				72BA1DA0252DA1A700D19FCB /* NSEMarketActivityDataManager.cpp */,
 				72BA1DA1252DA1A700D19FCB /* NSEMarketActivityDataManager.hpp */,
+				72C5A67C256BA0BA00EF506D /* DataFileDownloadHelper.cpp */,
+				72C5A67D256BA0BA00EF506D /* DataFileDownloadHelper.hpp */,
 			);
 			path = TelegramBotEqIN;
 			sourceTree = "<group>";
@@ -133,6 +138,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				725BD266252B5C7100D39E87 /* main.cpp in Sources */,
+				72C5A67E256BA0BA00EF506D /* DataFileDownloadHelper.cpp in Sources */,
 				725BD270252B5F5900D39E87 /* TelegramSession.cpp in Sources */,
 				72BA1DA2252DA1A700D19FCB /* NSEMarketActivityDataManager.cpp in Sources */,
 			);
