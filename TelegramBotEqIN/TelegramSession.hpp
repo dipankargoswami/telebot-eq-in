@@ -36,7 +36,7 @@ private:
 
     NSEMarketActivityDataManager dataMgr_;
     web::http::client::http_client* telegramClient_;
-    int update_id;
+    uint64_t update_id;
 
     std::vector<RequestDetails> validRequests_;
     std::vector<std::string> invalidRequests_;

@@ -71,7 +71,7 @@ void TelegramSession::run_loop() {
 pplx::task<void> TelegramSession::RequestJSONValueAsync()
 {
     char updIdStr[50];
-    sprintf(updIdStr,"%d",update_id + 1);
+    sprintf(updIdStr,"%llu",update_id + 1);
     std::string queryParam(U("{\"limit\":20, \"offset\":" + std::string(updIdStr) +"}"));
     
     return telegramClient_->request(methods::GET, "/getUpdates", queryParam, "application/json").then([](http_response response) -> pplx::task<json::value> {
@@ -114,16 +114,16 @@ void TelegramSession::processMessage(const json::value& v) {
             std::cout << "Received Text [" << msgText << ']' << std::endl;
 
             auto chatIter = msgIter->second.as_object().find("chat");
-            int userid = 0;
+            unsigned long long userid = 0;
             if (chatIter != msg.as_object().cend()) {
                 auto idIter = chatIter->second.as_object().find("id");
-                userid = idIter->second.as_integer();
+                userid = idIter->second.as_number().to_int64();
             }
             auto updIdIter = msg.as_object().find("update_id");
-            this->update_id = updIdIter->second.as_integer();
+            this->update_id = updIdIter->second.as_number().to_int64();
 
             char chatIdStr[50];
-            sprintf(chatIdStr,"%d",userid);
+            sprintf(chatIdStr,"%llu",userid);
 
             if(msgText == "/start") {
                 initMsgs_.push_back(chatIdStr);
